@@ -1,0 +1,24 @@
+# Raw REFIT data (too large for GitHub)
+REFITPowerData111215/
+REFIT_RAW_081116/
+*.7z
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.env
+venv/
+.venv/
+
+# Model checkpoints and outputs (optional – remove lines if you want these tracked)
+*.pth
+*.pkl
+
+# Claude Code
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
