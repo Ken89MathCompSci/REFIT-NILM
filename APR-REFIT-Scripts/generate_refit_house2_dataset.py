@@ -95,11 +95,16 @@ def scan_best_window(raw_df: pd.DataFrame) -> dict:
     """
     Find the best (N_TRAIN + N_VAL + N_TEST)-day contiguous window by
     maximising the minimum per-appliance (dishwasher, microwave,
-    washing_machine) activation count in the training portion.
+    washing_machine) activation count across ALL three splits.
+
+    Scoring across all splits prevents the common failure where one split
+    (e.g. validation) has near-zero microwave activations while training
+    looks healthy.  Ties are broken by harmonic mean of all 9 values
+    (3 appliances x 3 splits).
 
     Returns a dict with keys: train_start, train_end, val_start, val_end,
     test_start, test_end (all 'YYYY-MM-DD' strings), and
-    min_train_activation (int, worst-case activated sample count).
+    min_activation (int, worst-case activated sample count across all splits).
     """
     total_days = N_TRAIN + N_VAL + N_TEST   # 44
 
@@ -125,6 +130,7 @@ def scan_best_window(raw_df: pd.DataFrame) -> dict:
         )
 
     best_score  = -1
+    best_hmean  = -1
     best_start  = 0
 
     for start_idx in range(n_days_total - total_days + 1):
@@ -133,12 +139,19 @@ def scan_best_window(raw_df: pd.DataFrame) -> dict:
         diffs = (window_days[1:] - window_days[:-1]).days
         if diffs.max() > 1:
             continue
-        # Score = min training-portion activation count across the three apps
-        train_days  = window_days[:N_TRAIN]
-        train_mask  = counts.index.isin(train_days)
-        score       = int(counts.loc[train_mask].sum().min())
-        if score > best_score:
+
+        tr  = counts.loc[window_days[:N_TRAIN]].sum()
+        val = counts.loc[window_days[N_TRAIN:N_TRAIN + N_VAL]].sum()
+        tst = counts.loc[window_days[N_TRAIN + N_VAL:]].sum()
+
+        # Score = min activation across ALL 9 values (3 appliances x 3 splits)
+        all_vals = list(tr.values) + list(val.values) + list(tst.values)
+        score = int(min(all_vals))
+        hmean = len(all_vals) / sum(1 / v if v > 0 else 1e9 for v in all_vals)
+
+        if score > best_score or (score == best_score and hmean > best_hmean):
             best_score = score
+            best_hmean = hmean
             best_start = start_idx
 
     d = all_days
@@ -150,7 +163,7 @@ def scan_best_window(raw_df: pd.DataFrame) -> dict:
         "val_end":     d[i + N_TRAIN + N_VAL - 1].strftime("%Y-%m-%d"),
         "test_start":  d[i + N_TRAIN + N_VAL].strftime("%Y-%m-%d"),
         "test_end":    d[i + N_TRAIN + N_VAL + N_TEST - 1].strftime("%Y-%m-%d"),
-        "min_train_activation": best_score,
+        "min_activation": best_score,
     }
 
 
@@ -207,7 +220,7 @@ if __name__ == "__main__":
     print(f"  train      : {w['train_start']} to {w['train_end']}  ({N_TRAIN} days)")
     print(f"  validation : {w['val_start']}   to {w['val_end']}    ({N_VAL} days)")
     print(f"  test       : {w['test_start']}  to {w['test_end']}   ({N_TEST} days)")
-    print(f"  min train activation (DW / MW / WM): {w['min_train_activation']:,} hits")
+    print(f"  min activation across all splits (DW / MW / WM): {w['min_activation']:,} hits")
 
     splits = [
         {"name": "train",      "start": w["train_start"], "end": w["train_end"]},
