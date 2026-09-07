@@ -1,0 +1,70 @@
+{
+    "appliance": "fridge",
+    "dataset": "APR-REFIT-House2-dataset",
+    "model": "GatedTCNModel",
+    "version": "v2",
+    "fixes": {
+        "fix1_gate_head": "sigmoid(gate_logit) * sigmoid(power_logit), BCEWithLogits(gate_logit, y_on, pos_weight) added to the loss",
+        "fix2_adaptive_threshold": "train-locked adaptive threshold (21.0W) replaces the baseline scripts' uniform 10W for this appliance"
+    },
+    "window_size": 100,
+    "threshold_w": 21.0,
+    "pos_weight": 1.443064182194617,
+    "lambda_event": 1.0,
+    "model_params": {
+        "input_size": 1,
+        "output_size": 1,
+        "num_channels": [
+            8,
+            16
+        ],
+        "kernel_size": 3,
+        "dropout": 0.2
+    },
+    "train_params": {
+        "lr": 0.001,
+        "epochs": 2,
+        "patience": 5
+    },
+    "final_metrics": {
+        "train_loss": 0.8888999787536828,
+        "val_loss": 0.9133124947547913,
+        "test_loss": 0.8633120308319727,
+        "test_metrics": {
+            "mae": 41.88860321044922,
+            "rmse": 41.987857818603516,
+            "nete": 0.32968848943710327,
+            "sae": 4.9115118980407715,
+            "traditional_sae": 0.6394736842105263,
+            "precision": 0.3605263157894737,
+            "recall": 1.0,
+            "f1": 0.5299806576402321,
+            "TP": 137.0,
+            "TN": 0.0,
+            "FP": 243.0,
+            "FN": 0.0
+        },
+        "aggregates": {
+            "train_loss_mean": 0.8911323160738558,
+            "train_loss_var": 4.983329911037543e-06,
+            "val_loss_mean": 0.9147555207212765,
+            "val_loss_var": 2.0823239399509004e-06,
+            "val_mae_mean": 43.73687744140625,
+            "val_mae_var": 0.048372846096754074,
+            "val_sae_mean": 14.866777420043945,
+            "val_sae_var": 0.4843829572200775,
+            "val_f1_mean": 0.5039370078740157,
+            "val_f1_var": 0.0,
+            "val_precision_mean": 0.3368421052631579,
+            "val_precision_var": 0.0,
+            "val_recall_mean": 1.0,
+            "val_recall_var": 0.0,
+            "test_mae": 41.88860321044922,
+            "test_sae": 4.9115118980407715,
+            "test_f1": 0.5299806576402321,
+            "test_precision": 0.3605263157894737,
+            "test_recall": 1.0,
+            "test_loss": 0.8633120308319727
+        }
+    }
+}
