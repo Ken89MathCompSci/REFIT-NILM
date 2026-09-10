@@ -1,0 +1,127 @@
+{
+    "dataset": "APR-REFIT-House5-dataset (H5, train 2014-08-15..2014-09-13 / val 2014-09-14..2014-09-20 / test 2014-09-21..2014-09-27)",
+    "model": "CombinedPINNAdvancedLNN",
+    "description": "gated power = sigmoid(gate_logit) x sigmoid(power_logit)",
+    "thresholds": {
+        "train": {
+            "dishwasher": 24.0,
+            "fridge": 22.0,
+            "microwave": 21.0,
+            "washing_machine": 23.0
+        },
+        "val": {
+            "dishwasher": 24.0,
+            "fridge": 22.0,
+            "microwave": 40.0,
+            "washing_machine": 23.0
+        },
+        "test": {
+            "dishwasher": 24.0,
+            "fridge": 22.0,
+            "microwave": 21.0,
+            "washing_machine": 23.0
+        }
+    },
+    "pos_weights": {
+        "dishwasher": 14.242992954496508,
+        "fridge": 1.0,
+        "microwave": 48.65353778312287,
+        "washing_machine": 28.73133701392223
+    },
+    "window": {
+        "win": 299,
+        "stride_train": 30,
+        "stride_test": 299
+    },
+    "model_params": {
+        "in_ch": 8,
+        "hidden": 8,
+        "n_apps": 4,
+        "dt": 0.1,
+        "head_hidden": 8
+    },
+    "train_params": {
+        "lr": 0.001,
+        "epochs": 1,
+        "patience": 1,
+        "lambda_phys": 0.01,
+        "lambda_event": 0.15,
+        "epsilon_w": 50.0,
+        "warmup_epochs": 0,
+        "ramp_epochs": 1
+    },
+    "test_metrics": {
+        "dishwasher": {
+            "mae": 220.6481475830078,
+            "rmse": 389.7198181152344,
+            "nete": 1.748133659362793,
+            "sae": 204.03152465820312,
+            "traditional_sae": 0.8992,
+            "precision": 0.08867943650552346,
+            "recall": 1.0,
+            "f1": 0.16291193446285607,
+            "TP": 1750.0,
+            "TN": 266.0,
+            "FP": 17984.0,
+            "FN": 0.0,
+            "tp": 1750.0,
+            "tn": 266.0,
+            "fp": 17984.0,
+            "fn": 0.0
+        },
+        "fridge": {
+            "mae": 56.10132598876953,
+            "rmse": 76.5589828491211,
+            "nete": 0.45828303694725037,
+            "sae": 44.787567138671875,
+            "traditional_sae": 0.4171,
+            "precision": 0.577277794669099,
+            "recall": 1.0,
+            "f1": 0.7319925464242113,
+            "TP": 11392.0,
+            "TN": 266.0,
+            "FP": 8342.0,
+            "FN": 0.0,
+            "tp": 11392.0,
+            "tn": 266.0,
+            "fp": 8342.0,
+            "fn": 0.0
+        },
+        "microwave": {
+            "mae": 498.94378662109375,
+            "rmse": 542.4588012695312,
+            "nete": 7.4646830558776855,
+            "sae": 454.8590393066406,
+            "traditional_sae": 0.93665,
+            "precision": 0.050724637681159424,
+            "recall": 1.0,
+            "f1": 0.09655172413793103,
+            "TP": 1001.0,
+            "TN": 266.0,
+            "FP": 18733.0,
+            "FN": 0.0,
+            "tp": 1001.0,
+            "tn": 266.0,
+            "fp": 18733.0,
+            "fn": 0.0
+        },
+        "washing_machine": {
+            "mae": 2625.7900390625,
+            "rmse": 2728.688232421875,
+            "nete": 287.310546875,
+            "sae": 2625.7890625,
+            "traditional_sae": 0.9566,
+            "precision": 0.030505726157900072,
+            "recall": 1.0,
+            "f1": 0.05920535011801731,
+            "TP": 602.0,
+            "TN": 266.0,
+            "FP": 19132.0,
+            "FN": 0.0,
+            "tp": 602.0,
+            "tn": 266.0,
+            "fp": 19132.0,
+            "fn": 0.0
+        }
+    }
+}
